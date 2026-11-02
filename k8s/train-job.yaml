@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: train-smoke
+  namespace: mlops
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-mlflow
+          image: curlimages/curl:latest
+          command: ["sh", "-c",
+                    "until curl -sf http://mlflow:5000/health >/dev/null; do sleep 2; done"]
+      containers:
+        - name: train
+          image: mlops-train:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: "http://mlflow:5000"

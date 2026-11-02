@@ -1,0 +1,11 @@
+dataset: data/train.csv
+target: loan_status
+test_size: 0.2
+seed: 42
+models:
+  - name: knn
+    class: sklearn.neighbors.KNeighborsClassifier
+    params: {n_neighbors: 10}
+  - name: gb
+    class: sklearn.ensemble.GradientBoostingClassifier
+    params: {n_estimators: 1}
